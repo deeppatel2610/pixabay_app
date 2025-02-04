@@ -1,36 +1,54 @@
 import 'package:flutter/material.dart';
-import 'package:pixabay_app/provider/home_provider.dart';
 import 'package:provider/provider.dart';
 
-TextEditingController txtSearch = TextEditingController();
+import '../provider/home_provider.dart';
+import 'home_page.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class SearchPage extends StatelessWidget {
+  const SearchPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed("/search");
-            },
-            icon: const Icon(
-              Icons.search,
-              color: Colors.white,
+        leading: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(
+              width: 8,
             ),
-          )
-        ],
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(
+                Icons.arrow_back_ios_new_outlined,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
         backgroundColor: Colors.black,
-        title: const Text(
-          'Pixabay',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 2,
+        title: Card(
+          color: Colors.white12,
+          child: TextField(
+            style: const TextStyle(color: Colors.white60),
+            controller: txtSearch,
+            decoration: InputDecoration(
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    Provider.of<HomeProvider>(context, listen: false)
+                        .fetchSearch(txtSearch.text);
+                  },
+                  icon: const Icon(
+                    Icons.search,
+                    color: Colors.white60,
+                  ),
+                ),
+                hintText: '  Search',
+                hintStyle: const TextStyle(fontSize: 17),
+                border: InputBorder.none),
           ),
         ),
       ),
@@ -39,33 +57,6 @@ class HomePage extends StatelessWidget {
           if (provider.pixabayModel != null) {
             return Column(
               children: [
-                // Padding(
-                //   padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
-                //   child: TextField(
-                //     style: const TextStyle(color: Colors.white60),
-                //     controller: txtSearch,
-                //     decoration: InputDecoration(
-                //       suffixIcon: IconButton(
-                //         onPressed: () {
-                //           Provider.of<HomeProvider>(context, listen: false)
-                //               .fetchSearch(txtSearch.text);
-                //         },
-                //         icon: const Icon(
-                //           Icons.search,
-                //           color: Colors.white60,
-                //         ),
-                //       ),
-                //       hintText: 'Search',
-                //       hintStyle: const TextStyle(fontSize: 17),
-                //       focusedBorder: const OutlineInputBorder(
-                //         borderSide: BorderSide(color: Colors.white60),
-                //       ),
-                //       enabledBorder: const OutlineInputBorder(
-                //         borderSide: BorderSide(color: Colors.white60),
-                //       ),
-                //     ),
-                //   ),
-                // ),
                 Expanded(
                   child: ListView.builder(
                     itemCount: provider.pixabayModel!.hits!.length,
